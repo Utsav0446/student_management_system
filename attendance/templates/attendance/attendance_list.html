@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance - Student Management System{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h1>Attendance Records</h1>
+    <a href="{% url 'attendance_create' %}" class="btn btn-primary">Record Attendance</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <select name="course" class="form-select">
+                    <option value="">All Courses</option>
+                    {% for course in courses %}
+                    <option value="{{ course.pk }}" {% if request.GET.course == course.pk|stringformat:"s" %}selected{% endif %}>{{ course.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="date" class="form-control" value="{{ request.GET.date|default:'' }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Course</th>
+                        <th>Student</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance %}
+                    <tr>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.course.name }}</td>
+                        <td>{{ record.student.full_name }}</td>
+                        <td>
+                            {% if record.status == 'present' %}
+                            <span class="status-present">Present</span>
+                            {% elif record.status == 'absent' %}
+                            <span class="status-absent">Absent</span>
+                            {% else %}
+                            <span class="status-late">Late</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ record.remarks|default:'N/A'|truncatechars:30 }}</td>
+                        <td class="actions">
+                            <a href="{% url 'attendance_update' record.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'attendance_delete' record.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No attendance records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
