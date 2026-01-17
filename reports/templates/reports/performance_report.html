@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Performance Report - Student Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Performance Report</h1>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <select name="student" class="form-select">
+                    <option value="">All Students</option>
+                    {% for student in students %}
+                    <option value="{{ student.pk }}" {% if request.GET.student == student.pk|stringformat:"s" %}selected{% endif %}>{{ student.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Student Performance Summary</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Courses Enrolled</th>
+                        <th>Average Score</th>
+                        <th>Attendance Rate</th>
+                        <th>Performance Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for perf in performance_stats %}
+                    <tr>
+                        <td>{{ perf.student__full_name }}</td>
+                        <td>{{ perf.courses_count }}</td>
+                        <td>{{ perf.avg_score|floatform:1 }}</td>
+                        <td>{{ perf.attendance_rate|floatform:1 }}%</td>
+                        <td>
+                            {% if perf.avg_score >= 90 %}
+                            <span class="badge bg-success">Excellent</span>
+                            {% elif perf.avg_score >= 80 %}
+                            <span class="badge bg-primary">Good</span>
+                            {% elif perf.avg_score >= 70 %}
+                            <span class="badge bg-warning">Average</span>
+                            {% else %}
+                            <span class="badge bg-danger">Needs Improvement</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No performance data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

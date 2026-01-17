@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Student Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="number">{{ student_count }}</div>
+            <div class="label">Total Students</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="number">{{ course_count }}</div>
+            <div class="label">Total Courses</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="number">{{ attendance_count }}</div>
+            <div class="label">Attendance Records</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="number">{{ grade_count }}</div>
+            <div class="label">Grade Records</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Quick Links</div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'student_create' %}" class="list-group-item list-group-item-action">Add New Student</a>
+                    <a href="{% url 'course_create' %}" class="list-group-item list-group-item-action">Add New Course</a>
+                    <a href="{% url 'attendance_create' %}" class="list-group-item list-group-item-action">Record Attendance</a>
+                    <a href="{% url 'grade_create' %}" class="list-group-item list-group-item-action">Enter Grades</a>
+                    <a href="{% url 'enrollment_create' %}" class="list-group-item list-group-item-action">Enroll Student in Course</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Reports</div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'attendance_report' %}" class="list-group-item list-group-item-action">Attendance Report</a>
+                    <a href="{% url 'grade_report' %}" class="list-group-item list-group-item-action">Grade Report</a>
+                    <a href="{% url 'performance_report' %}" class="list-group-item list-group-item-action">Performance Report</a>
+                    <a href="{% url 'enrollment_report' %}" class="list-group-item list-group-item-action">Enrollment Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">Recent Activities</div>
+            <div class="card-body">
+                <p class="text-muted text-center">Add some data to see recent activities.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

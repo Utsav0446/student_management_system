@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Enrollment Report - Student Management System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Enrollment Report</h1>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <select name="course" class="form-select">
+                    <option value="">All Courses</option>
+                    {% for course in courses %}
+                    <option value="{{ course.pk }}" {% if request.GET.course == course.pk|stringformat:"s" %}selected{% endif %}>{{ course.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Enrollment Summary</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Enrollment Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>{{ enrollment.student.full_name }}</td>
+                        <td>{{ enrollment.course.name }}</td>
+                        <td>{{ enrollment.enrollment_date }}</td>
+                        <td>
+                            {% if enrollment.status == 'active' %}
+                            <span class="status-active">Active</span>
+                            {% elif enrollment.status == 'completed' %}
+                            <span class="status-completed">Completed</span>
+                            {% else %}
+                            <span class="status-dropped">Dropped</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No enrollment data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3>{{ total_enrollments }}</h3>
+                <p class="text-muted">Total Enrollments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3>{{ active_enrollments }}</h3>
+                <p class="text-muted">Active Enrollments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3>{{ completion_rate|floatform:1 }}%</h3>
+                <p class="text-muted">Completion Rate</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
