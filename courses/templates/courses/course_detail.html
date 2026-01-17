@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.name }} - Student Management System{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h1>{{ course.name }}</h1>
+    <div>
+        <a href="{% url 'course_update' course.pk %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'course_delete' course.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'course_list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Course Information</div>
+            <div class="card-body">
+                <p><strong>Course Code:</strong> {{ course.course_code }}</p>
+                <p><strong>Credits:</strong> {{ course.credits }}</p>
+                <p><strong>Teacher:</strong> {{ course.teacher|default:'N/A' }}</p>
+                <p><strong>Semester:</strong> {{ course.get_semester_display }} {{ course.year }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Description</div>
+            <div class="card-body">
+                <p>{{ course.description|default:'No description provided'|linebreaks }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Enrolled Students</h5>
+        <a href="{% url 'enrollment_create' %}" class="btn btn-sm btn-primary">Enroll Student</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Enrollment Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in course.enrollment_set.all %}
+                    <tr>
+                        <td>{{ enrollment.student.full_name }}</td>
+                        <td>{{ enrollment.enrollment_date }}</td>
+                        <td>
+                            {% if enrollment.status == 'active' %}
+                            <span class="status-active">Active</span>
+                            {% elif enrollment.status == 'completed' %}
+                            <span class="status-completed">Completed</span>
+                            {% else %}
+                            <span class="status-dropped">Dropped</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'enrollment_delete' enrollment.pk %}" class="btn btn-sm btn-danger">Remove</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No students enrolled in this course.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
